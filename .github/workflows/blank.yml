@@ -12,22 +12,28 @@ on:
   # workflow_dispatch:
 
 jobs:
-  assoc:
-   # needs: provision-ec2
-    runs-on: windows-latest
+  # This workflow contains a single job called "associate"
+  associate:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name: Check out code
-      uses: actions/checkout@master
-
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.REGION }}
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code from master branch
+        uses: actions/checkout@v2
         
-    
-    - name: Create EC2 node using AWSCLI
-      run: |
-        $INSTANCEPRO=aws cloudformation describe-stacks --stack-name x4 --query "Stacks[0].Outputs[0].OutputValue"  
-        aws ec2 run-instances --image-id ami-072b0ca48713abe5a --count 1 --instance-type t2.micro --key-name MyEC2Instance --iam-instance-profile Arn="$INSTANCEPRO" --security-group-ids sg-057943c0ab3e75683 --subnet-id subnet-08cc31842e79717d3 --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=New15}]" --user-data file://xxx.txt 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.SESSION_TOKEN }}
+          aws-region: ${{ secrets.REGION }}
+        
+      - name: Create Instance Profile
+        run: |
+          STACKNAME=INSTANCEPROFILECHEFNODE11
+          aws cloudformation --region ${{ secrets.REGION }} create-stack --stack-name $STACKNAME --template-url https://s3.amazonaws.com/opsworks-cm-us-east-1-prod-default-assets/misc/opsworks-cm-nodes-roles.yaml --capabilities CAPABILITY_IAM
+          sleep 240
+          INSTANCEPRO=$(aws cloudformation describe-stacks --stack-name $STACKNAME --query "Stacks[0].Outputs[0].OutputValue")
+          aws ec2 run-instances --image-id ami-072b0ca48713abe5a --count 1 --instance-type t2.micro --key-name MyEC2Instance --iam-instance-profile Arn="$INSTANCEPRO" --security-group-ids sg-057943c0ab3e75683 --subnet-id subnet-08cc31842e79717d3 --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=New17}]" --user-data file://xxx.txt
