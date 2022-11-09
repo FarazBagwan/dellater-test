@@ -36,4 +36,4 @@ jobs:
           
     - name: Create EC2 node using AWSCLI
       run: |
-        aws ec2 run-instances --image-id ami-072b0ca48713abe5a --count 1 --instance-type t2.micro --key-name MyEC2Instance --security-group-ids sg-057943c0ab3e75683 --subnet-id subnet-08cc31842e79717d3 --iam-instance-profile Arn=$INSTANCEPRO --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=New11}]" --user-data file://xxx.txt 
+        aws ec2 run-instances --image-id ami-072b0ca48713abe5a --count 1 --instance-type t2.micro --key-name MyEC2Instance --security-group-ids sg-057943c0ab3e75683 --subnet-id subnet-08cc31842e79717d3 --iam-instance-profile Name=$STACKNAME,Arn=$INSTANCEPRO --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=New11}]" --user-data file://xxx.txt 
