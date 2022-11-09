@@ -1,6 +1,6 @@
- This is a workflow to Create a Chef Automate Server in AWS OpsWorks
+# This is a workflow to Create a Chef Automate Server in AWS OpsWorks
 
-name: NodeAssociationTest
+name: NodeAssociationFlow
 
 # Controls when the workflow will run
 on:
