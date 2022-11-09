@@ -25,12 +25,7 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.REGION }}
-  
-         
-    - name: Create Instance Profile
-      run: |
-        $INSTANCEPRO="x4"
           
     - name: Create EC2 node using AWSCLI
       run: |
-        aws ec2 run-instances --image-id ami-072b0ca48713abe5a --count 1 --instance-type t2.micro --key-name MyEC2Instance --iam-instance-profile Name="$INSTANCEPRO" --security-group-ids sg-057943c0ab3e75683 --subnet-id subnet-08cc31842e79717d3 --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=New14}]" --user-data file://xxx.txt 
+        aws ec2 run-instances --image-id ami-072b0ca48713abe5a --count 1 --instance-type t2.micro --key-name MyEC2Instance --iam-instance-profile Name=x4 --security-group-ids sg-057943c0ab3e75683 --subnet-id subnet-08cc31842e79717d3 --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=New15}]" --user-data file://xxx.txt 
