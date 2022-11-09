@@ -29,11 +29,11 @@ jobs:
          
     - name: Create Instance Profile
       run: |
-        $STACKNAME="x2"
+        $STACKNAME="x3"
         aws cloudformation --region ${{ secrets.REGION }} create-stack --stack-name $STACKNAME --template-url https://s3.amazonaws.com/opsworks-cm-us-east-1-prod-default-assets/misc/opsworks-cm-nodes-roles.yaml --capabilities CAPABILITY_IAM
         sleep 200
         $INSTANCEPRO=aws cloudformation describe-stacks --stack-name $STACKNAME --query "Stacks[0].Outputs[0].OutputValue"
           
     - name: Create EC2 node using AWSCLI
       run: |
-        aws ec2 run-instances --image-id ami-072b0ca48713abe5a --count 1 --instance-type t2.micro --key-name MyEC2Instance --security-group-ids sg-057943c0ab3e75683 --subnet-id subnet-08cc31842e79717d3 --iam-instance-profile '{"arn": $INSTANCEPRO }' --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=New13}]" --user-data file://xxx.txt 
+        aws ec2 run-instances --image-id ami-072b0ca48713abe5a --count 1 --instance-type t2.micro --key-name MyEC2Instance --security-group-ids sg-057943c0ab3e75683 --subnet-id subnet-08cc31842e79717d3 --iam-instance-profile '{"arn": "$INSTANCEPRO" }' --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=New14}]" --user-data file://xxx.txt 
